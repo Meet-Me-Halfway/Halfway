@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Meet in the Middle App</title>
+  <!-- CSS -->
+  <link href="style.css" rel="stylesheet" type="text/css">
+  <!-- jquery -->
+  <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+  <!-- JavaScript -->
+  <script language="javascript" type="text/javascript" src="main.js"></script>
+</head>
+
+<body>
+  <div id="container">
+    <h1>HALFWAY!</h1>      
+    <p>The quickest way to meet</p>  
+
+    <!-- location 1 -->
+    <p>Where are you?</p>
+    <input type="text" id="location1" placeholder="Enter your city name">
+    
+    <!-- location 2 -->
+    <p>Where are you?</p>
+    <input type="text" id="location2" placeholder="Enter your city name">
+    
+    <!-- submit locations -->
+    <button id="submit">submit</button>
+    
+    <!-- map canvas -->
+    <div id="map"></div>
+  </div>
+
+  <!-- Google Maps API -->
+  <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
+  </script>
+
+  <script type="text/javascript">
+    var map;
+
+    // initialize google maps on map
+    // displays map centered on Hack Reactor HQ
+    function initMap(){
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: {
+        lat: 37.783616, lng: -122.408988},
+        zoom: 8
+      });
+      console.log(map);
+    };
+  </script>
+</body>
+</html>
