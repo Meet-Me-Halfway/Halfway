@@ -56,33 +56,53 @@
   </script>
 
   <script type="text/javascript">
+    var geocoder,
+        map;
+
+    // initialize google maps on map
+    // displays map centered on Hack Reactor HQ
+    function initialize(){
+      geocoder = new google.maps.Geocoder();
+      var start_latlng = new google.maps.LatLng(37.783616, -122.408988);
+      var mapOptions = {
+        center: start_latlng,
+        zoom: 8
+      };
+      map = new google.maps.Map( document.getElementById('map'), mapOptions );
+    };
+  </script>
+
+  <script type="text/javascript">
     // gets location1 and location2 input on click event for submit button
+
+    // Coordinates needs to be defined in the top-level scope
+    // so we can access it through closure later on!
+    var coordinates = [];
+
     $( "#submit" ).click(function(e) {
       var addresses = [ $("#address1").val(), $("#address2").val() ];
+
       addresses = addresses.map(function(address) {
         return address.toLowerCase().trim();
       });
-      console.log(addresses);
 
-      var coordinates = getAddressCoordinates(addresses);
-      console.log(coordinates);
-      
-      var mid = midpoint( coordinates[0], coordinates[1] );
-      console.log(midpoint);
+      // Start converting addresses to coordinates.
+      // When finished, run the 'placeMidpoint' function.
+      getAddressCoordinates(addresses, placeMidpoint);
     });
 
-    function getAddressCoordinates(addresses){
+    function getAddressCoordinates(addresses, callback){
       // to convert address to location coordinates
       // TO DO: is this the right way to grab the input from above?
-      var coordinates = [];
       for (var i = 0; i < addresses.length; i++){
+        // Geocode the addresses
         geocoder.geocode( { 'address': addresses[i] }, function(results, status) {
           if (status == google.maps.GeocoderStatus.OK) {
             map.setCenter( results[0].geometry.location );
             var lat = results[0].geometry.location.lat();
             var lng = results[0].geometry.location.lng();
 
-            coordinates.push( {
+            coordinates.push({
               address: addresses[i],
               lat: lat,
               lng: lng
@@ -93,22 +113,38 @@
               position: results[0].geometry.location
             });
             // this logs an object with the lat and lng property of each address, but lat and lng property hold a function value, not a number
-            console.log(results[0].geometry.location);
+
+            // If we already have two coordinates in the array,
+            // run the provided 'callback' function on the two
+            // coordinates.
+            if (coordinates.length === 2) {
+              callback(coordinates[0], coordinates[1]);
+            }
+
           } else {
             console.log("Geocode was not successful for the following reason: " + status);
           }
         });
       }
-      return coordinates;
     }
 
-    function midpoint(start, end){
+    function placeMidpoint(start, end){
       var lat_midpoint = (end.lat + start.lat) / 2;
       var long_midpoint = (end.lng + start.lng) / 2;
-      return {
+
+      var midpoint = {
         lat: lat_midpoint,
         lng: long_midpoint
-      } 
+      };
+
+      // Place a marker on the midpoint.
+      var marker = new google.maps.Marker({
+              map: map,
+              position: midpoint
+            });
+
+      // Focus the map on the midpoint location.
+      map.setCenter(midpoint);
     }
 
     // ALTERNATIVE MIDPOINT FUNCTION
