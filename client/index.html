@@ -4,27 +4,47 @@
 <head>
   <meta charset="UTF-8">
   <title>Meet in the Middle App</title>
+  <!-- Google fonts -->
+  <link href='https://fonts.googleapis.com/css?family=Loved+by+the+King' rel='stylesheet' type='text/css'>
   <!-- CSS -->
   <link href="style.css" rel="stylesheet" type="text/css">
   <!-- jquery -->
   <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
 </head>
 
+<script type="text/javascript">
+    var geocoder,
+        map;
+
+    // initialize google maps on map
+    // displays map centered on Hack Reactor HQ
+    function initialize(){
+      geocoder = new google.maps.Geocoder();
+      var start_latlng = new google.maps.LatLng(37.783616, -122.408988);
+      var mapOptions = {
+        center: start_latlng,
+        zoom: 10
+      };
+      map = new google.maps.Map( document.getElementById('map'), mapOptions ); 
+      console.log(map);
+    };
+  </script>
+
 <body onload="initialize()">
   <div id="container">
     <h1>HALFWAY!</h1>      
-    <p>The quickest way to meet in the middle</p>  
+    <p>The quickest way to meet in the middle.</p>  
 
     <!-- location 1 -->
-    <p>Where are you?</p>
-    <input type="text" id="address1" placeholder="Enter your location">
+    <div>Where are you?</div>
+    <input type="text" id="address1" class="location" placeholder="Enter your location">
     
     <!-- location 2 -->
-    <p>Where is your friend?</p>
-    <input type="text" id="address2" placeholder="Enter your friend's location">
+    <div>Where is your friend?</div>
+    <input type="text" id="address2" class="location" placeholder="Enter your friend's location">
     
     <!-- submit locations -->
-    <button id="submit">submit</button>
+    <div><button id="submit">Find your middle</button></div>
     
     <!-- map canvas -->
     <div id="map"></div>
