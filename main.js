@@ -1,24 +1,31 @@
 // gets location1 and location2 input on click event for submit button
 $( "#submit" ).click(function(e) {
-  var cities = [ $("#location1").val(), $("#location2").val() ];
-​
-  cities = cities.map(function(city) {
-    return encodeURI(city.toLowerCase().trim());
+  var addresses = [ $("#address1").val(), $("#address2").val() ];
+  addresses = addresses.map(function(address) {
+    return address.toLowerCase().trim();
   });
-​
-  console.log(cities);
-
- // TO DO: convert into cities into lat lng coordinates
+  console.log(addresses);
+  getAddressCoordinates(addresses);
 });
 
-function getLocationCoordinates(city){
-  // TO DO: get Google Maps Geocoding service 
+function getAddressCoordinates(addresses){
   // to convert address to location coordinates
-}
-
-function addLocationMarkers(){
-  // TO DO: find out from Google Maps API docs how to add marker on map
-  // TO DO: add markers on map of location1 and location2 coordinates
+  // TO DO: is this the right way to grab the input from above?
+  for (var i = 0; i < addresses.length; i++){
+    geocoder.geocode( { 'address': addresses[i] }, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        map.setCenter( results[0].geometry.location );
+        var latlng = new google.maps.LatLng( results[0].geometry.location );
+        var marker = new google.maps.Marker({
+          map: map,
+          position: results[0].geometry.location
+        });
+        console.log(latlng);
+      } else {
+        console.log("Geocode was not successful for the following reason: " + status);
+      }
+    });
+  }
 }
 
 // uses location1 and location2 inputs to calculate its midpoint 
@@ -31,6 +38,13 @@ function getMidpointLocation(start, end){
     long: long_midpoint
   } 
 }
+
+function addLocationMarkers(){
+  // TO DO: find out from Google Maps API docs how to add marker on map
+  // TO DO: add markers on map of location1 and location2 coordinates
+}
+
+
 
 
 
